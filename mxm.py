@@ -36,8 +36,8 @@ def randmatNotRef(n):
         for i in range(n):
             fila = "".join("0" if j == i else random.choice("01") for j in range(n))
             row.append(fila)
-            if any("1" in f for f in row):
-                return row
+        if any("1" in f for f in row):
+            return row
 
 def validar_matriz(texto, n):
     lineas = [l.strip() for l in texto.strip().splitlines() if l.strip()]
@@ -512,6 +512,8 @@ with st.expander ("Menu",expanded=True):
             mat, err = validar_matriz(texto_matriz, n)
             if err:
                 st.error(err)
+            elif np.all(numpyconv(mat) == 0):
+                st.error("La matriz no puede ser de puros ceros.")
             else:
                 st.session_state["matrix"] = mat
         elif modo == "3. Color, Dijkstra, Prim, Kruskal":
@@ -524,7 +526,9 @@ with st.expander ("Menu",expanded=True):
                     st.error(err)
                 else:
                     temp = numpyconv(mat)
-                    if np.any(np.diag(temp) == 1):
+                    if np.all(temp == 0):
+                        st.error("La matriz no puede ser de puros ceros.")
+                    elif np.any(np.diag(temp) == 1):
                         st.error("No debe tener ningún nodo reflexivo.")
                     else:
                         st.session_state["matrix"] = mat
